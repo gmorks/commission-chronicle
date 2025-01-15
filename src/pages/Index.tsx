@@ -13,7 +13,7 @@ const Index = () => {
   
   const [newEntry, setNewEntry] = useState({
     bookName: "",
-    volumes: 0,
+    volumes: "",  // Changed from 0 to ""
     filesGenerated: 0,
     pricePerFile: 0,
   });
@@ -54,7 +54,7 @@ const Index = () => {
     
     setNewEntry({
       bookName: "",
-      volumes: 0,
+      volumes: "",  // Changed from 0 to ""
       filesGenerated: 0,
       pricePerFile: 0,
     });
@@ -160,9 +160,10 @@ const Index = () => {
                     <Label htmlFor="volumes">Volumes</Label>
                     <Input
                       id="volumes"
-                      type="number"
+                      type="text"  // Changed from "number" to "text"
                       value={newEntry.volumes}
-                      onChange={(e) => setNewEntry(prev => ({ ...prev, volumes: Number(e.target.value) }))}
+                      onChange={(e) => setNewEntry(prev => ({ ...prev, volumes: e.target.value }))}
+                      placeholder="e.g., 01-5"
                     />
                   </div>
                   <div>

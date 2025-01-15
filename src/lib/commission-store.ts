@@ -3,7 +3,7 @@ import { create } from 'zustand';
 export interface CommissionEntry {
   id: string;
   bookName: string;
-  volumes: number;
+  volumes: string;  // Changed from number to string
   filesGenerated: number;
   pricePerFile: number;
   totalPrice: number;
