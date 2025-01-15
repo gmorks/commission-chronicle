@@ -102,10 +102,19 @@ const Index = () => {
     if (!element) return;
     
     try {
+      // Wait for a small delay to ensure all content is rendered
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
       const dataUrl = await toPng(element, {
         width: 512,
-        height: Math.round((512 * element.offsetHeight) / element.offsetWidth),
+        height: element.offsetHeight,
+        pixelRatio: 1,
+        quality: 1,
+        style: {
+          transform: 'scale(1)',
+        },
       });
+      
       const link = document.createElement('a');
       link.download = `${currentMonth.month}-${currentMonth.year}-commissions.png`;
       link.href = dataUrl;
@@ -116,6 +125,7 @@ const Index = () => {
         description: "Month exported as PNG",
       });
     } catch (err) {
+      console.error('Export error:', err);
       toast({
         title: "Error",
         description: "Failed to export as PNG",
