@@ -22,6 +22,8 @@ interface CommissionStore {
   months: MonthData[];
   setCurrentMonth: (month: MonthData) => void;
   addEntry: (entry: Omit<CommissionEntry, 'id'>) => void;
+  editEntry: (entryId: string, updatedEntry: Omit<CommissionEntry, 'id'>) => void;
+  deleteEntry: (entryId: string) => void;
   createNewMonth: (month: string, year: number) => void;
   loadMonth: (monthId: string) => void;
 }
@@ -48,6 +50,59 @@ const useCommissionStore = create<CommissionStore>((set, get) => ({
         ...state.currentMonth,
         entries: [...state.currentMonth.entries, newEntry],
         totalAmount: state.currentMonth.totalAmount + newEntry.totalPrice,
+      };
+      
+      const updatedMonths = state.months.map((m) =>
+        m.id === updatedMonth.id ? updatedMonth : m
+      );
+      
+      saveToStorage(updatedMonths);
+      
+      return {
+        currentMonth: updatedMonth,
+        months: updatedMonths,
+      };
+    });
+  },
+
+  editEntry: (entryId, updatedEntry) => {
+    set((state) => {
+      if (!state.currentMonth) return state;
+
+      const oldEntry = state.currentMonth.entries.find(e => e.id === entryId);
+      const newEntry = { ...updatedEntry, id: entryId };
+      
+      const updatedMonth = {
+        ...state.currentMonth,
+        entries: state.currentMonth.entries.map(e => 
+          e.id === entryId ? newEntry : e
+        ),
+        totalAmount: state.currentMonth.totalAmount - (oldEntry?.totalPrice || 0) + updatedEntry.totalPrice,
+      };
+      
+      const updatedMonths = state.months.map((m) =>
+        m.id === updatedMonth.id ? updatedMonth : m
+      );
+      
+      saveToStorage(updatedMonths);
+      
+      return {
+        currentMonth: updatedMonth,
+        months: updatedMonths,
+      };
+    });
+  },
+
+  deleteEntry: (entryId) => {
+    set((state) => {
+      if (!state.currentMonth) return state;
+
+      const deletedEntry = state.currentMonth.entries.find(e => e.id === entryId);
+      
+      const updatedMonth = {
+        ...state.currentMonth,
+        entries: state.currentMonth.entries.filter(e => e.id !== entryId),
+        totalAmount: state.currentMonth.totalAmount - (deletedEntry?.totalPrice || 0),
       };
       
       const updatedMonths = state.months.map((m) =>

@@ -6,17 +6,20 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import useCommissionStore from "@/lib/commission-store";
 import { toPng } from 'html-to-image';
+import { Pencil, Trash2 } from "lucide-react";
 
 const Index = () => {
   const { toast } = useToast();
-  const { currentMonth, months, createNewMonth, addEntry, loadMonth } = useCommissionStore();
+  const { currentMonth, months, createNewMonth, addEntry, editEntry, deleteEntry, loadMonth } = useCommissionStore();
   
   const [newEntry, setNewEntry] = useState({
     bookName: "",
-    volumes: "",  // Changed from 0 to ""
+    volumes: "",
     filesGenerated: 0,
     pricePerFile: 0,
   });
+
+  const [editingEntry, setEditingEntry] = useState<string | null>(null);
   
   const [newMonthData, setNewMonthData] = useState({
     month: "",
@@ -39,7 +42,7 @@ const Index = () => {
     });
   };
 
-  const handleAddEntry = () => {
+  const handleAddOrUpdateEntry = () => {
     if (!currentMonth) {
       toast({
         title: "Error",
@@ -50,18 +53,45 @@ const Index = () => {
     }
     
     const totalPrice = newEntry.filesGenerated * newEntry.pricePerFile;
-    addEntry({ ...newEntry, totalPrice });
+    
+    if (editingEntry) {
+      editEntry(editingEntry, { ...newEntry, totalPrice });
+      setEditingEntry(null);
+      toast({
+        title: "Success",
+        description: "Entry updated successfully",
+      });
+    } else {
+      addEntry({ ...newEntry, totalPrice });
+      toast({
+        title: "Success",
+        description: "Entry added successfully",
+      });
+    }
     
     setNewEntry({
       bookName: "",
-      volumes: "",  // Changed from 0 to ""
+      volumes: "",
       filesGenerated: 0,
       pricePerFile: 0,
     });
-    
+  };
+
+  const handleEdit = (entry: any) => {
+    setEditingEntry(entry.id);
+    setNewEntry({
+      bookName: entry.bookName,
+      volumes: entry.volumes,
+      filesGenerated: entry.filesGenerated,
+      pricePerFile: entry.pricePerFile,
+    });
+  };
+
+  const handleDelete = (entryId: string) => {
+    deleteEntry(entryId);
     toast({
       title: "Success",
-      description: "Entry added successfully",
+      description: "Entry deleted successfully",
     });
   };
 
@@ -72,7 +102,10 @@ const Index = () => {
     if (!element) return;
     
     try {
-      const dataUrl = await toPng(element);
+      const dataUrl = await toPng(element, {
+        width: 512,
+        height: Math.round((512 * element.offsetHeight) / element.offsetWidth),
+      });
       const link = document.createElement('a');
       link.download = `${currentMonth.month}-${currentMonth.year}-commissions.png`;
       link.href = dataUrl;
@@ -144,7 +177,9 @@ const Index = () => {
           <>
             {/* New Entry Form */}
             <Card className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Add New Entry</h2>
+              <h2 className="text-xl font-semibold mb-4">
+                {editingEntry ? "Edit Entry" : "Add New Entry"}
+              </h2>
               <div className="grid gap-4">
                 <div>
                   <Label htmlFor="bookName">Book Name</Label>
@@ -160,7 +195,7 @@ const Index = () => {
                     <Label htmlFor="volumes">Volumes</Label>
                     <Input
                       id="volumes"
-                      type="text"  // Changed from "number" to "text"
+                      type="text"
                       value={newEntry.volumes}
                       onChange={(e) => setNewEntry(prev => ({ ...prev, volumes: e.target.value }))}
                       placeholder="e.g., 01-5"
@@ -185,7 +220,9 @@ const Index = () => {
                     />
                   </div>
                 </div>
-                <Button onClick={handleAddEntry}>Add Entry</Button>
+                <Button onClick={handleAddOrUpdateEntry}>
+                  {editingEntry ? "Update Entry" : "Add Entry"}
+                </Button>
               </div>
             </Card>
 
@@ -218,6 +255,22 @@ const Index = () => {
                         <Label>Total</Label>
                         <p className="font-medium">${entry.totalPrice}</p>
                       </div>
+                    </div>
+                    <div className="flex justify-end gap-2 mt-2">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handleEdit(entry)}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handleDelete(entry.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                   </Card>
                 ))}
