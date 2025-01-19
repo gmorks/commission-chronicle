@@ -134,6 +134,35 @@ const Index = () => {
     }
   };
 
+  const exportAsText = () => {
+    if (!currentMonth) return;
+    
+    let text = `Commission Report - ${currentMonth.month} ${currentMonth.year}\n\n`;
+    
+    currentMonth.entries.forEach((entry, index) => {
+      text += `${index + 1}. ${entry.bookName}\n`;
+      text += `   Volumes: ${entry.volumes}\n`;
+      text += `   Files: ${entry.filesGenerated}\n`;
+      text += `   Price per file: $${entry.pricePerFile}\n\n`;
+    });
+    
+    text += `\nMonth Total: $${currentMonth.totalAmount}`;
+    
+    const blob = new Blob([text], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.download = `${currentMonth.month}-${currentMonth.year}-commissions.txt`;
+    link.href = url;
+    link.click();
+    
+    URL.revokeObjectURL(url);
+    
+    toast({
+      title: "Success",
+      description: "Text report exported successfully",
+    });
+  };
+
   return (
     <div className="container mx-auto p-4 max-w-4xl">
       <h1 className="text-3xl font-bold mb-8 text-center">Commission Tracker</h1>
@@ -242,7 +271,10 @@ const Index = () => {
                 <h2 className="text-xl font-semibold">
                   {currentMonth.month} {currentMonth.year}
                 </h2>
-                <Button onClick={exportAsPng}>Export as PNG</Button>
+                <div className="flex gap-2">
+                  <Button onClick={exportAsText}>Export as Text</Button>
+                  <Button onClick={exportAsPng}>Export as PNG</Button>
+                </div>
               </div>
               
               <div className="space-y-4">
