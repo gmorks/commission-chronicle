@@ -3,7 +3,7 @@ import { create } from 'zustand';
 export interface CommissionEntry {
   id: string;
   bookName: string;
-  volumes: string;  // Changed from number to string
+  volumes: string;
   filesGenerated: number;
   pricePerFile: number;
   totalPrice: number;
@@ -26,6 +26,8 @@ interface CommissionStore {
   deleteEntry: (entryId: string) => void;
   createNewMonth: (month: string, year: number) => void;
   loadMonth: (monthId: string) => void;
+  exportToJson: () => void;
+  importFromJson: (file: File) => Promise<void>;
 }
 
 const useCommissionStore = create<CommissionStore>((set, get) => ({
@@ -141,6 +143,30 @@ const useCommissionStore = create<CommissionStore>((set, get) => ({
     set((state) => ({
       currentMonth: state.months.find((m) => m.id === monthId) || null,
     }));
+  },
+
+  exportToJson: () => {
+    const { months } = get();
+    const dataStr = JSON.stringify(months, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.download = 'commission-data.json';
+    link.href = url;
+    link.click();
+    URL.revokeObjectURL(url);
+  },
+
+  importFromJson: async (file: File) => {
+    try {
+      const text = await file.text();
+      const data = JSON.parse(text) as MonthData[];
+      set({ months: data, currentMonth: null });
+      saveToStorage(data);
+    } catch (error) {
+      console.error('Error importing data:', error);
+      throw new Error('Invalid JSON file');
+    }
   },
 }));
 

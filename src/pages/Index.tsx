@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import useCommissionStore from "@/lib/commission-store";
 import { toPng } from 'html-to-image';
@@ -6,9 +6,12 @@ import { MonthCreation } from "@/components/commission/MonthCreation";
 import { MonthSelector } from "@/components/commission/MonthSelector";
 import { EntryForm } from "@/components/commission/EntryForm";
 import { EntriesList } from "@/components/commission/EntriesList";
+import { Button } from "@/components/ui/button";
+import { Download, Upload } from "lucide-react";
 
 const Index = () => {
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { 
     currentMonth, 
     months, 
@@ -16,7 +19,9 @@ const Index = () => {
     addEntry, 
     editEntry, 
     deleteEntry, 
-    loadMonth 
+    loadMonth,
+    exportToJson,
+    importFromJson
   } = useCommissionStore();
   
   const [editingEntry, setEditingEntry] = useState<string | null>(null);
@@ -68,6 +73,30 @@ const Index = () => {
       title: "Success",
       description: "Entry deleted successfully",
     });
+  };
+
+  const handleImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      await importFromJson(file);
+      toast({
+        title: "Success",
+        description: "Data imported successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to import data. Please check the file format.",
+        variant: "destructive",
+      });
+    }
+
+    // Reset the file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   const exportAsText = () => {
@@ -159,6 +188,24 @@ const Index = () => {
   return (
     <div className="container mx-auto p-4 max-w-4xl">
       <h1 className="text-3xl font-bold mb-8 text-center">Commission Tracker</h1>
+      
+      <div className="flex justify-end gap-2 mb-4">
+        <Button onClick={exportToJson} className="flex items-center gap-2">
+          <Download className="w-4 h-4" />
+          Export Data
+        </Button>
+        <Button onClick={() => fileInputRef.current?.click()} className="flex items-center gap-2">
+          <Upload className="w-4 h-4" />
+          Import Data
+        </Button>
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleImport}
+          accept=".json"
+          className="hidden"
+        />
+      </div>
       
       <div className="grid gap-8">
         <MonthCreation createNewMonth={createNewMonth} />
