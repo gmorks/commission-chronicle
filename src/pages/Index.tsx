@@ -102,18 +102,44 @@ const Index = () => {
     if (!element) return;
     
     try {
+      // Create a temporary div for the simplified export view
+      const exportDiv = document.createElement('div');
+      exportDiv.className = 'p-6 bg-white';
+      exportDiv.style.width = '512px';
+      
+      // Create the content
+      let content = `<h2 class="text-xl font-semibold mb-4">Commission Report - ${currentMonth.month} ${currentMonth.year}</h2>`;
+      
+      currentMonth.entries.forEach((entry, index) => {
+        content += `
+          <div class="mb-4">
+            <p class="font-medium">${index + 1}. ${entry.bookName}</p>
+            <p class="ml-4">Volumes: ${entry.volumes}</p>
+            <p class="ml-4">Files: ${entry.filesGenerated}</p>
+          </div>
+        `;
+      });
+      
+      content += `<p class="text-lg font-semibold mt-4">Month Total: $${currentMonth.totalAmount}</p>`;
+      
+      exportDiv.innerHTML = content;
+      document.body.appendChild(exportDiv);
+      
       // Wait for a small delay to ensure all content is rendered
       await new Promise(resolve => setTimeout(resolve, 100));
       
-      const dataUrl = await toPng(element, {
+      const dataUrl = await toPng(exportDiv, {
         width: 512,
-        height: element.offsetHeight,
+        height: exportDiv.offsetHeight,
         pixelRatio: 1,
         quality: 1,
         style: {
           transform: 'scale(1)',
         },
       });
+      
+      // Clean up the temporary div
+      document.body.removeChild(exportDiv);
       
       const link = document.createElement('a');
       link.download = `${currentMonth.month}-${currentMonth.year}-commissions.png`;
@@ -142,8 +168,7 @@ const Index = () => {
     currentMonth.entries.forEach((entry, index) => {
       text += `${index + 1}. ${entry.bookName}\n`;
       text += `   Volumes: ${entry.volumes}\n`;
-      text += `   Files: ${entry.filesGenerated}\n`;
-      text += `   Price per file: $${entry.pricePerFile}\n\n`;
+      text += `   Files: ${entry.filesGenerated}\n\n`;
     });
     
     text += `\nMonth Total: $${currentMonth.totalAmount}`;
@@ -303,10 +328,6 @@ const Index = () => {
                           <Label>Files</Label>
                           <p className="font-medium">{entry.filesGenerated}</p>
                         </div>
-                        <div>
-                          <Label>Price/File</Label>
-                          <p className="font-medium">${entry.pricePerFile}</p>
-                        </div>
                       </div>
                       
                       {/* Actions */}
@@ -345,3 +366,4 @@ const Index = () => {
 };
 
 export default Index;
+
