@@ -15,7 +15,7 @@ function createWindow() {
   });
 
   // Register file protocol handler
-  protocol.interceptFileProtocol('file', (request, callback) => {
+  protocol.interceptFileProtocol('file', (request: Electron.ProtocolRequest, callback: (response: Electron.ProtocolResponse) => void) => {
     const url = request.url.substr(8);
     callback({ path: path.normalize(`${__dirname}/${url}`) });
   });
@@ -31,7 +31,7 @@ function createWindow() {
 app.whenReady().then(() => {
   createWindow();
 
-  protocol.registerFileProtocol('app', (request, callback) => {
+  protocol.registerFileProtocol('app', (request: Electron.ProtocolRequest, callback: (response: Electron.ProtocolResponse) => void) => {
     const url = request.url.substr(6);
     callback({ path: path.normalize(`${__dirname}/${url}`) });
   });
