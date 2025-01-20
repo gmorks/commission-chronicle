@@ -6,12 +6,15 @@
   },
   "files": [
     "dist/**/*",
-    "electron/**/*"
+    "dist-electron/**/*"
   ],
   "win": {
     "target": [
       "portable"
     ],
     "icon": "public/favicon.ico"
+  },
+  "extraMetadata": {
+    "main": "dist-electron/main.js"
   }
 }

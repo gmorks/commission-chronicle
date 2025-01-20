@@ -9,14 +9,12 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       webSecurity: true,
-      // Habilita content scripts y permisos para file://
       allowRunningInsecureContent: false,
-      // Deshabilita el aislamiento de origen si es necesario
       webviewTag: false,
     }
   });
 
-  // Registra el protocolo file: para manejar assets locales
+  // Register file protocol handler
   protocol.interceptFileProtocol('file', (request, callback) => {
     const url = request.url.substr(8);
     callback({ path: path.normalize(`${__dirname}/${url}`) });
@@ -25,21 +23,14 @@ function createWindow() {
   if (process.env.VITE_DEV_SERVER_URL) {
     win.loadURL(process.env.VITE_DEV_SERVER_URL);
   } else {
-    // Asegúrate de que la ruta sea relativa al directorio actual
-    const indexPath = path.join(__dirname, 'dist', 'index.html');
-    console.log('Loading from:', indexPath);
+    const indexPath = path.join(__dirname, '../dist/index.html');
     win.loadFile(indexPath);
   }
-
-  // Abre DevTools para debug
-  win.webContents.openDevTools();
 }
 
-// Configuración adicional para el manejo de protocolos
 app.whenReady().then(() => {
   createWindow();
 
-  // Registra el protocolo personalizado si es necesario
   protocol.registerFileProtocol('app', (request, callback) => {
     const url = request.url.substr(6);
     callback({ path: path.normalize(`${__dirname}/${url}`) });
