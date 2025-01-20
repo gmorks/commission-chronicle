@@ -1,7 +1,8 @@
-import { app, BrowserWindow, protocol } from 'electron';
+import electron from 'electron';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+const { app, BrowserWindow, protocol } = electron;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
