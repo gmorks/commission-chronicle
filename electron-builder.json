@@ -15,6 +15,7 @@
     "icon": "public/favicon.ico"
   },
   "extraMetadata": {
-    "main": "dist-electron/main.js"
+    "main": "dist-electron/main.js",
+    "type": "module"
   }
 }
