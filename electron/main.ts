@@ -1,5 +1,5 @@
-import { app, BrowserWindow } from 'electron';
-import path from 'path';
+const { app, BrowserWindow, protocol } = require('electron');
+const path = require('path');
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -7,21 +7,35 @@ function createWindow() {
     height: 800,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
+      webSecurity: true,
+      allowRunningInsecureContent: false,
+      webviewTag: false,
     }
   });
 
-  // In development, load from the Vite dev server
+  // Register file protocol handler
+  protocol.interceptFileProtocol('file', (request, callback) => {
+    const url = request.url.substr(8);
+    callback({ path: path.normalize(`${__dirname}/${url}`) });
+  });
+
   if (process.env.VITE_DEV_SERVER_URL) {
     win.loadURL(process.env.VITE_DEV_SERVER_URL);
-    win.webContents.openDevTools();
   } else {
-    // In production, load the built files
-    win.loadFile(path.join(__dirname, '../dist/index.html'));
+    const indexPath = path.join(__dirname, '../dist/index.html');
+    win.loadFile(indexPath);
   }
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  createWindow();
+
+  protocol.registerFileProtocol('app', (request, callback) => {
+    const url = request.url.substr(6);
+    callback({ path: path.normalize(`${__dirname}/${url}`) });
+  });
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
