@@ -30,7 +30,7 @@ export const EntryForm = ({ onSubmit, editingEntry, initialValues }: EntryFormPr
     if (!newEntry.bookName) {
       toast({
         title: "Error",
-        description: "Please enter a book name",
+        description: "Por favor, ingresa el nombre del libro",
         variant: "destructive",
       });
       return;
@@ -50,31 +50,31 @@ export const EntryForm = ({ onSubmit, editingEntry, initialValues }: EntryFormPr
   return (
     <Card className="p-6">
       <h2 className="text-xl font-semibold mb-4">
-        {editingEntry ? "Edit Entry" : "Add New Entry"}
+        {editingEntry ? "Editar Entrada" : "Agregar Nueva Entrada"}
       </h2>
       <div className="grid gap-4">
         <div>
-          <Label htmlFor="bookName">Book Name</Label>
+          <Label htmlFor="bookName">Nombre del Libro</Label>
           <Input
             id="bookName"
             value={newEntry.bookName}
             onChange={(e) => setNewEntry(prev => ({ ...prev, bookName: e.target.value }))}
-            placeholder="Enter book name"
+            placeholder="Ingresa el nombre del libro"
           />
         </div>
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <Label htmlFor="volumes">Volumes</Label>
+            <Label htmlFor="volumes">Volúmenes</Label>
             <Input
               id="volumes"
               type="text"
               value={newEntry.volumes}
               onChange={(e) => setNewEntry(prev => ({ ...prev, volumes: e.target.value }))}
-              placeholder="e.g., 01-5"
+              placeholder="ej., 01-5"
             />
           </div>
           <div>
-            <Label htmlFor="filesGenerated">Files Generated</Label>
+            <Label htmlFor="filesGenerated">Archivos Generados</Label>
             <Input
               id="filesGenerated"
               type="number"
@@ -83,7 +83,7 @@ export const EntryForm = ({ onSubmit, editingEntry, initialValues }: EntryFormPr
             />
           </div>
           <div>
-            <Label htmlFor="pricePerFile">Price per File</Label>
+            <Label htmlFor="pricePerFile">Precio por Archivo</Label>
             <Input
               id="pricePerFile"
               type="number"
@@ -93,7 +93,7 @@ export const EntryForm = ({ onSubmit, editingEntry, initialValues }: EntryFormPr
           </div>
         </div>
         <Button onClick={handleSubmit}>
-          {editingEntry ? "Update Entry" : "Add Entry"}
+          {editingEntry ? "Actualizar Entrada" : "Agregar Entrada"}
         </Button>
       </div>
     </Card>

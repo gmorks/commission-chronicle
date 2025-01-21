@@ -82,18 +82,17 @@ const Index = () => {
     try {
       await importFromJson(file);
       toast({
-        title: "Success",
-        description: "Data imported successfully",
+        title: "Éxito",
+        description: "Datos importados correctamente",
       });
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to import data. Please check the file format.",
+        description: "Error al importar datos. Por favor, verifica el formato del archivo.",
         variant: "destructive",
       });
     }
 
-    // Reset the file input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -102,28 +101,28 @@ const Index = () => {
   const exportAsText = () => {
     if (!currentMonth) return;
     
-    let text = `Commission Report - ${currentMonth.month} ${currentMonth.year}\n\n`;
+    let text = `Informe de Comisiones - ${currentMonth.month} ${currentMonth.year}\n\n`;
     
     currentMonth.entries.forEach((entry, index) => {
       text += `${index + 1}. ${entry.bookName}\n`;
-      text += `   Volumes: ${entry.volumes}\n`;
-      text += `   Files: ${entry.filesGenerated}\n\n`;
+      text += `   Volúmenes: ${entry.volumes}\n`;
+      text += `   Archivos: ${entry.filesGenerated}\n\n`;
     });
     
-    text += `\nMonth Total: $${currentMonth.totalAmount}`;
+    text += `\nTotal del Mes: $${currentMonth.totalAmount}`;
     
     const blob = new Blob([text], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.download = `${currentMonth.month}-${currentMonth.year}-commissions.txt`;
+    link.download = `${currentMonth.month}-${currentMonth.year}-comisiones.txt`;
     link.href = url;
     link.click();
     
     URL.revokeObjectURL(url);
     
     toast({
-      title: "Success",
-      description: "Text report exported successfully",
+      title: "Éxito",
+      description: "Informe de texto exportado correctamente",
     });
   };
 
@@ -187,16 +186,16 @@ const Index = () => {
 
   return (
     <div className="container mx-auto p-4 max-w-4xl">
-      <h1 className="text-3xl font-bold mb-8 text-center">Commission Tracker</h1>
+      <h1 className="text-3xl font-bold mb-8 text-center">Registro de Comisiones</h1>
       
       <div className="flex justify-end gap-2 mb-4">
         <Button onClick={exportToJson} className="flex items-center gap-2">
           <Download className="w-4 h-4" />
-          Export Data
+          Exportar Datos
         </Button>
         <Button onClick={() => fileInputRef.current?.click()} className="flex items-center gap-2">
           <Upload className="w-4 h-4" />
-          Import Data
+          Importar Datos
         </Button>
         <input
           type="file"

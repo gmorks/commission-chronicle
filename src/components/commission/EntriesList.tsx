@@ -26,8 +26,8 @@ export const EntriesList = ({
           {currentMonth.month} {currentMonth.year}
         </h2>
         <div className="flex gap-2">
-          <Button onClick={onExportText}>Export as Text</Button>
-          <Button onClick={onExportPng}>Export as PNG</Button>
+          <Button onClick={onExportText}>Exportar como Texto</Button>
+          <Button onClick={onExportPng}>Exportar como PNG</Button>
         </div>
       </div>
       
@@ -37,7 +37,7 @@ export const EntriesList = ({
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <div className="flex-1">
-                  <Label>Book Name</Label>
+                  <Label>Nombre del Libro</Label>
                   <p className="font-medium">{entry.bookName}</p>
                 </div>
                 <div className="text-right">
@@ -48,11 +48,11 @@ export const EntriesList = ({
               
               <div className="grid grid-cols-3 gap-2">
                 <div>
-                  <Label>Volumes</Label>
+                  <Label>Volúmenes</Label>
                   <p className="font-medium">{entry.volumes}</p>
                 </div>
                 <div>
-                  <Label>Files</Label>
+                  <Label>Archivos</Label>
                   <p className="font-medium">{entry.filesGenerated}</p>
                 </div>
               </div>
@@ -79,7 +79,7 @@ export const EntriesList = ({
         
         <div className="mt-4 text-right">
           <p className="text-lg font-semibold">
-            Month Total: ${currentMonth.totalAmount}
+            Total del Mes: ${currentMonth.totalAmount}
           </p>
         </div>
       </div>

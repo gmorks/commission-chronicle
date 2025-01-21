@@ -20,34 +20,34 @@ export const MonthCreation = ({ createNewMonth }: MonthCreationProps) => {
     if (!newMonthData.month) {
       toast({
         title: "Error",
-        description: "Please enter a month name",
+        description: "Por favor, ingresa el nombre del mes",
         variant: "destructive",
       });
       return;
     }
     createNewMonth(newMonthData.month, newMonthData.year);
     toast({
-      title: "Success",
-      description: "New month created",
+      title: "Éxito",
+      description: "Nuevo mes creado",
     });
   };
 
   return (
     <Card className="p-6">
-      <h2 className="text-xl font-semibold mb-4">Create New Month</h2>
+      <h2 className="text-xl font-semibold mb-4">Crear Nuevo Mes</h2>
       <div className="grid gap-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="month">Month</Label>
+            <Label htmlFor="month">Mes</Label>
             <Input
               id="month"
               value={newMonthData.month}
               onChange={(e) => setNewMonthData(prev => ({ ...prev, month: e.target.value }))}
-              placeholder="Enter month name"
+              placeholder="Ingresa el nombre del mes"
             />
           </div>
           <div>
-            <Label htmlFor="year">Year</Label>
+            <Label htmlFor="year">Año</Label>
             <Input
               id="year"
               type="number"
@@ -56,7 +56,7 @@ export const MonthCreation = ({ createNewMonth }: MonthCreationProps) => {
             />
           </div>
         </div>
-        <Button onClick={handleCreateMonth}>Create New Month</Button>
+        <Button onClick={handleCreateMonth}>Crear Nuevo Mes</Button>
       </div>
     </Card>
   );
