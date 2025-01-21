@@ -7,7 +7,7 @@ import type { CommissionEntry } from "@/lib/commission-store";
 interface EditManagerProps {
   currentMonth: MonthData | null;
   onSubmit: (entry: Omit<CommissionEntry, 'id'>) => void;
-  onEdit: (entryId: string) => void;
+  onEdit: (entryId: string, updatedEntry: Omit<CommissionEntry, 'id'>) => void;
   onDelete: (entryId: string) => void;
   onExportText: () => void;
   onExportPng: () => void;
@@ -38,7 +38,11 @@ export const EditManager = ({
   };
 
   const handleSubmit = (entry: any) => {
-    onSubmit(entry);
+    if (editingEntry) {
+      onEdit(editingEntry, entry);
+    } else {
+      onSubmit(entry);
+    }
     setEditingEntry(null);
     setEditingValues(null);
   };
