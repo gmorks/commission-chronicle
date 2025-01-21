@@ -1,17 +1,14 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import useCommissionStore from "@/lib/commission-store";
 import { toPng } from 'html-to-image';
 import { MonthCreation } from "@/components/commission/MonthCreation";
 import { MonthSelector } from "@/components/commission/MonthSelector";
-import { EntryForm } from "@/components/commission/EntryForm";
-import { EntriesList } from "@/components/commission/EntriesList";
-import { Button } from "@/components/ui/button";
-import { Download, Upload } from "lucide-react";
+import { Header } from "@/components/commission/Header";
+import { EditManager } from "@/components/commission/EditManager";
 
 const Index = () => {
   const { toast } = useToast();
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const { 
     currentMonth, 
     months, 
@@ -23,57 +20,6 @@ const Index = () => {
     exportToJson,
     importFromJson
   } = useCommissionStore();
-  
-  const [editingEntry, setEditingEntry] = useState<string | null>(null);
-  const [editingValues, setEditingValues] = useState<any>(null);
-
-  const handleEdit = (entryId: string) => {
-    const entry = currentMonth?.entries.find(e => e.id === entryId);
-    if (!entry) return;
-    
-    setEditingEntry(entryId);
-    setEditingValues({
-      bookName: entry.bookName,
-      volumes: entry.volumes,
-      filesGenerated: entry.filesGenerated,
-      pricePerFile: entry.pricePerFile,
-    });
-  };
-
-  const handleSubmit = (entry: any) => {
-    if (!currentMonth) {
-      toast({
-        title: "Error",
-        description: "Please select or create a month first",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    if (editingEntry) {
-      editEntry(editingEntry, entry);
-      setEditingEntry(null);
-      setEditingValues(null);
-      toast({
-        title: "Success",
-        description: "Entry updated successfully",
-      });
-    } else {
-      addEntry(entry);
-      toast({
-        title: "Success",
-        description: "Entry added successfully",
-      });
-    }
-  };
-
-  const handleDelete = (entryId: string) => {
-    deleteEntry(entryId);
-    toast({
-      title: "Success",
-      description: "Entry deleted successfully",
-    });
-  };
 
   const handleImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -93,9 +39,42 @@ const Index = () => {
       });
     }
 
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+    if (event.target) {
+      event.target.value = '';
     }
+  };
+
+  const handleSubmit = (entry: any) => {
+    if (!currentMonth) {
+      toast({
+        title: "Error",
+        description: "Por favor selecciona o crea un mes primero",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (entry.id) {
+      editEntry(entry.id, entry);
+      toast({
+        title: "Éxito",
+        description: "Entrada actualizada correctamente",
+      });
+    } else {
+      addEntry(entry);
+      toast({
+        title: "Éxito",
+        description: "Entrada agregada correctamente",
+      });
+    }
+  };
+
+  const handleDelete = (entryId: string) => {
+    deleteEntry(entryId);
+    toast({
+      title: "Éxito",
+      description: "Entrada eliminada correctamente",
+    });
   };
 
   const exportAsText = () => {
@@ -134,19 +113,19 @@ const Index = () => {
       exportDiv.className = 'p-6 bg-white';
       exportDiv.style.width = '512px';
       
-      let content = `<h2 class="text-xl font-semibold mb-4">Commission Report - ${currentMonth.month} ${currentMonth.year}</h2>`;
+      let content = `<h2 class="text-xl font-semibold mb-4">Informe de Comisiones - ${currentMonth.month} ${currentMonth.year}</h2>`;
       
       currentMonth.entries.forEach((entry, index) => {
         content += `
           <div class="mb-4">
             <p class="font-medium">${index + 1}. ${entry.bookName}</p>
-            <p class="ml-4">Volumes: ${entry.volumes}</p>
-            <p class="ml-4">Files: ${entry.filesGenerated}</p>
+            <p class="ml-4">Volúmenes: ${entry.volumes}</p>
+            <p class="ml-4">Archivos: ${entry.filesGenerated}</p>
           </div>
         `;
       });
       
-      content += `<p class="text-lg font-semibold mt-4">Month Total: $${currentMonth.totalAmount}</p>`;
+      content += `<p class="text-lg font-semibold mt-4">Total del Mes: $${currentMonth.totalAmount}</p>`;
       
       exportDiv.innerHTML = content;
       document.body.appendChild(exportDiv);
@@ -166,19 +145,19 @@ const Index = () => {
       document.body.removeChild(exportDiv);
       
       const link = document.createElement('a');
-      link.download = `${currentMonth.month}-${currentMonth.year}-commissions.png`;
+      link.download = `${currentMonth.month}-${currentMonth.year}-comisiones.png`;
       link.href = dataUrl;
       link.click();
       
       toast({
-        title: "Success",
-        description: "Month exported as PNG",
+        title: "Éxito",
+        description: "Informe exportado como PNG correctamente",
       });
     } catch (err) {
       console.error('Export error:', err);
       toast({
         title: "Error",
-        description: "Failed to export as PNG",
+        description: "Error al exportar como PNG",
         variant: "destructive",
       });
     }
@@ -186,25 +165,7 @@ const Index = () => {
 
   return (
     <div className="container mx-auto p-4 max-w-4xl">
-      <h1 className="text-3xl font-bold mb-8 text-center">Registro de Comisiones</h1>
-      
-      <div className="flex justify-end gap-2 mb-4">
-        <Button onClick={exportToJson} className="flex items-center gap-2">
-          <Download className="w-4 h-4" />
-          Exportar Datos
-        </Button>
-        <Button onClick={() => fileInputRef.current?.click()} className="flex items-center gap-2">
-          <Upload className="w-4 h-4" />
-          Importar Datos
-        </Button>
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleImport}
-          accept=".json"
-          className="hidden"
-        />
-      </div>
+      <Header onExport={exportToJson} onImport={handleImport} />
       
       <div className="grid gap-8">
         <MonthCreation createNewMonth={createNewMonth} />
@@ -214,22 +175,14 @@ const Index = () => {
           onMonthSelect={loadMonth} 
         />
 
-        {currentMonth && (
-          <>
-            <EntryForm 
-              onSubmit={handleSubmit}
-              editingEntry={editingEntry}
-              initialValues={editingValues}
-            />
-            <EntriesList
-              currentMonth={currentMonth}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              onExportText={exportAsText}
-              onExportPng={exportAsPng}
-            />
-          </>
-        )}
+        <EditManager
+          currentMonth={currentMonth}
+          onSubmit={handleSubmit}
+          onEdit={editEntry}
+          onDelete={handleDelete}
+          onExportText={exportAsText}
+          onExportPng={exportAsPng}
+        />
       </div>
     </div>
   );
