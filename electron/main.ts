@@ -1,10 +1,5 @@
-import electron from 'electron';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const { app, BrowserWindow, protocol } = electron;
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { app, BrowserWindow } from 'electron'
+import path from 'path'
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -12,44 +7,28 @@ function createWindow() {
     height: 800,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false,
-      webSecurity: true,
-      allowRunningInsecureContent: false,
-      webviewTag: false,
+      contextIsolation: false
     }
-  });
-
-  // Register file protocol handler
-  protocol.interceptFileProtocol('file', (request: Electron.ProtocolRequest, callback: (response: Electron.ProtocolResponse) => void) => {
-    const url = request.url.substr(8);
-    callback({ path: path.normalize(`${__dirname}/${url}`) });
-  });
+  })
 
   if (process.env.VITE_DEV_SERVER_URL) {
-    win.loadURL(process.env.VITE_DEV_SERVER_URL);
+    win.loadURL(process.env.VITE_DEV_SERVER_URL)
+    win.webContents.openDevTools()
   } else {
-    const indexPath = path.join(__dirname, '../dist/index.html');
-    win.loadFile(indexPath);
+    win.loadFile(path.join(__dirname, '../dist/index.html'))
   }
 }
 
-app.whenReady().then(() => {
-  createWindow();
-
-  protocol.registerFileProtocol('app', (request: Electron.ProtocolRequest, callback: (response: Electron.ProtocolResponse) => void) => {
-    const url = request.url.substr(6);
-    callback({ path: path.normalize(`${__dirname}/${url}`) });
-  });
-});
+app.whenReady().then(createWindow)
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    app.quit();
+    app.quit()
   }
-});
+})
 
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
+    createWindow()
   }
-});
+})
