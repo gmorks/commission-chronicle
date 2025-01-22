@@ -14,11 +14,16 @@ function createWindow() {
   // In development, load from the dev server
   if (process.env.VITE_DEV_SERVER_URL) {
     win.loadURL(process.env.VITE_DEV_SERVER_URL);
+    win.webContents.openDevTools(); // Open DevTools in development
   } else {
     // In production, load from the built files
-    const indexPath = path.join(__dirname, 'dist', 'index.html');
-    win.loadFile(indexPath);
+    win.loadFile(path.join(__dirname, 'dist', 'index.html'));
   }
+
+  // For debugging
+  win.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
+    console.error('Failed to load:', errorCode, errorDescription);
+  });
 }
 
 app.whenReady().then(() => {
