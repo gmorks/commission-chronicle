@@ -6,7 +6,8 @@
   },
   "files": [
     "dist/**/*",
-    "dist-electron/**/*"
+    "dist-electron/**/*",
+    "main.cjs"
   ],
   "win": {
     "target": [
@@ -15,6 +16,6 @@
     "icon": "public/favicon.ico"
   },
   "extraMetadata": {
-    "main": "dist-electron/main.js"
+    "main": "main.cjs"
   }
 }

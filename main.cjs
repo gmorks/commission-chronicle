@@ -23,8 +23,7 @@ function createWindow() {
   if (process.env.VITE_DEV_SERVER_URL) {
     win.loadURL(process.env.VITE_DEV_SERVER_URL);
   } else {
-    const indexPath = path.join(__dirname, '../dist/index.html');
-    win.loadFile(indexPath);
+    win.loadFile(path.join(__dirname, '../dist/index.html'));
   }
 }
 
