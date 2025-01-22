@@ -1,4 +1,4 @@
-const { app, BrowserWindow, protocol } = require('electron');
+const { app, BrowserWindow } = require('electron');
 const path = require('path');
 
 function createWindow() {
@@ -7,43 +7,32 @@ function createWindow() {
     height: 800,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false,
-      webSecurity: true,
-      allowRunningInsecureContent: false,
-      webviewTag: false,
+      contextIsolation: false
     }
   });
 
-  // Register file protocol handler
-  protocol.interceptFileProtocol('file', (request, callback) => {
-    const url = request.url.substr(8);
-    callback({ path: path.normalize(`${__dirname}/${url}`) });
-  });
-
+  // In development, load from the dev server
   if (process.env.VITE_DEV_SERVER_URL) {
     win.loadURL(process.env.VITE_DEV_SERVER_URL);
   } else {
-    win.loadFile('dist/index.html');
+    // In production, load from the built files
+    const indexPath = path.join(__dirname, 'dist', 'index.html');
+    win.loadFile(indexPath);
   }
 }
 
 app.whenReady().then(() => {
   createWindow();
 
-  protocol.registerFileProtocol('app', (request, callback) => {
-    const url = request.url.substr(6);
-    callback({ path: path.normalize(`${__dirname}/${url}`) });
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
   });
 });
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
-  }
-});
-
-app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
   }
 });

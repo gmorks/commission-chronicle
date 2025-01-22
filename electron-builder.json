@@ -6,7 +6,6 @@
   },
   "files": [
     "dist/**/*",
-    "dist-electron/**/*",
     "main.cjs"
   ],
   "win": {
@@ -15,7 +14,14 @@
     ],
     "icon": "public/favicon.ico"
   },
-  "extraMetadata": {
-    "main": "main.cjs"
+  "mac": {
+    "target": [
+      "dmg"
+    ]
+  },
+  "linux": {
+    "target": [
+      "AppImage"
+    ]
   }
 }
