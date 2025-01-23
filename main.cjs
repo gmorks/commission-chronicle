@@ -7,22 +7,33 @@ function createWindow() {
     height: 800,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
+      webSecurity: false // Only for debugging, remove in production
     }
   });
 
   // In development, load from the dev server
   if (process.env.VITE_DEV_SERVER_URL) {
     win.loadURL(process.env.VITE_DEV_SERVER_URL);
-    win.webContents.openDevTools(); // Open DevTools in development
   } else {
     // In production, load from the built files
     win.loadFile(path.join(__dirname, 'dist', 'index.html'));
   }
 
+  // Always open DevTools for debugging
+  win.webContents.openDevTools();
+
   // For debugging
   win.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
     console.error('Failed to load:', errorCode, errorDescription);
+  });
+
+  win.webContents.on('dom-ready', () => {
+    console.log('DOM is ready');
+  });
+
+  win.webContents.on('console-message', (event, level, message) => {
+    console.log('Renderer Console:', message);
   });
 }
 
