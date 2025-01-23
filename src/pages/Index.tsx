@@ -8,6 +8,8 @@ import { Header } from "@/components/commission/Header";
 import { EditManager } from "@/components/commission/EditManager";
 
 const Index = () => {
+  console.log("Index component rendering");
+  
   const { toast } = useToast();
   const { 
     currentMonth, 
@@ -20,6 +22,9 @@ const Index = () => {
     exportToJson,
     importFromJson
   } = useCommissionStore();
+
+  console.log("Current month:", currentMonth);
+  console.log("Available months:", months);
 
   const handleImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
