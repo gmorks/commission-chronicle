@@ -5,9 +5,6 @@
     "beforeDevCommand": "npm run dev",
     "frontendDist": "../dist"
   },
-  "identifier": "com.commission-tracker",
-  "productName": "Commission Tracker",
-  "version": "0.1.0",
   "app": {
     "security": {
       "csp": null
@@ -25,7 +22,6 @@
   "bundle": {
     "active": true,
     "targets": ["msi", "nsis"],
-    "identifier": "com.commission-tracker",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
@@ -34,12 +30,8 @@
       "icons/icon.ico"
     ]
   },
-  "security": {
-    "csp": null
-  },
-  "allowlist": {
+  "plugins": {
     "fs": {
-      "all": true,
       "scope": ["$APPDATA/*", "$APPDATA/commission-tracker/*"]
     },
     "dialog": {
