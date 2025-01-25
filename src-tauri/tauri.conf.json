@@ -17,7 +17,10 @@
         "title": "Commission Tracker",
         "width": 1024
       }
-    ]
+    ],
+    "identifier": "com.commission-tracker",
+    "productName": "Commission Tracker",
+    "version": "0.1.0"
   },
   "bundle": {
     "active": true,
