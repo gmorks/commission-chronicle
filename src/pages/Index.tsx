@@ -118,11 +118,11 @@ const Index = () => {
       exportDiv.className = 'p-6 bg-white';
       exportDiv.style.width = '512px';
       
-      let content = `<h2 class="text-xl font-semibold mb-4">Informe de Comisiones - ${currentMonth.month} ${currentMonth.year}</h2>`;
+      let content = `<h1 class="text-lg font-semibold mb-4">Comisiones Spiral - ${currentMonth.month} ${currentMonth.year}</h1>`;
       
       currentMonth.entries.forEach((entry, index) => {
         content += `
-          <div class="mb-4">
+          <div class="mb-4" style="border: 1px solid #ccc; padding: 8px; margin: -1px 0;">
             <p class="font-medium">${index + 1}. ${entry.bookName}</p>
             <p class="ml-4">Volúmenes: ${entry.volumes}</p>
             <p class="ml-4">Archivos: ${entry.filesGenerated}</p>
@@ -130,7 +130,7 @@ const Index = () => {
         `;
       });
       
-      content += `<p class="text-lg font-semibold mt-4">Total del Mes: $${currentMonth.totalAmount}</p>`;
+      content += `<h2 class="text-xl font-semibold mt-4">Total del Mes: $${currentMonth.totalAmount}</h2>`;
       
       exportDiv.innerHTML = content;
       document.body.appendChild(exportDiv);

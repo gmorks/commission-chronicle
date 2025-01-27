@@ -20,11 +20,8 @@
         "center": true,
         "windowEffects": {
           "effects": [
-            "mica",
-            "tabbed",
-            "blur"
+            "mica"
           ]
-
         }
       }
     ],
