@@ -4,25 +4,16 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 export default defineConfig(({ mode }) => ({
-  clearScreen: false,
   plugins: [
     react(),
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
   base: './',
   server: {
-    strictPort: true,
     host: "::",
-    port: 5173,
+    port: 8080
   },
-  envPrefix: ['VITE_', 'TAURI_ENV_*'],
   build: {
-    target:
-      process.env.TAURI_ENV_PLATFORM == 'windows'
-      ? 'chrome105'
-      : 'safari13',
-    minify: !process.env.TAURI_ENV_DEBUG ? 'esbuild' : false,
-    sourcemap: !!process.env.TAURI_ENV_DEBUG,
     outDir: 'dist',
     emptyOutDir: true,
     rollupOptions: {
