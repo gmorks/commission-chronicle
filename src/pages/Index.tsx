@@ -6,6 +6,7 @@ import { MonthCreation } from "@/components/commission/MonthCreation";
 import { MonthSelector } from "@/components/commission/MonthSelector";
 import { Header } from "@/components/commission/Header";
 import { EditManager } from "@/components/commission/EditManager";
+import { Search } from "@/components/commission/Search";
 
 const Index = () => {
   console.log("Index component rendering");
@@ -173,6 +174,7 @@ const Index = () => {
       <Header onExport={exportToJson} onImport={handleImport} />
       
       <div className="grid gap-8">
+        <Search months={months} onMonthSelect={loadMonth} />
         <MonthCreation createNewMonth={createNewMonth} />
         <MonthSelector 
           months={months} 
