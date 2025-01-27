@@ -1,12 +1,53 @@
-# Welcome to your Lovable project
+# Commission Chronicle
 
-## Project info
+## Project Info
 
 **URL**: https://lovable.dev/projects/d5c54e6b-5595-488b-9827-72f2fb284826
 
-## How can I edit this code?
+## Overview
 
-There are several ways of editing your application.
+Commission Chronicle is an application designed to help you manage and track commissions efficiently. It provides a user-friendly interface to record, view, and export commission data.
+
+## Features
+
+- **Monthly Reports**: Generate detailed monthly reports of commissions.
+- **Export as PNG**: Export your commission reports as PNG images for easy sharing and record-keeping.
+- **User-Friendly Interface**: Intuitive and easy-to-use interface for managing commission entries.
+- **Responsive Design**: Works seamlessly on various devices and screen sizes.
+
+## How to Use
+
+1. **Add Entries**: Input your commission data including book names, volumes, and files generated.
+2. **View Reports**: View a summary of your commissions for the current month.
+3. **Export Reports**: Export the monthly report as a PNG image with a single click.
+
+## Development
+
+To work on this project locally, follow these steps:
+
+1. **Clone the Repository**:
+    ```sh
+    git clone https://github.com/yourusername/commission-chronicle.git
+    cd commission-chronicle
+    ```
+
+2. **Install Dependencies**:
+    ```sh
+    npm install
+    ```
+
+3. **Run the Application**:
+    ```sh
+    npm start
+    ```
+
+## Requirements
+
+- Node.js & npm - [Install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+
+## Using Lovable
+
+You can also edit this application using Lovable.
 
 **Use Lovable**
 
@@ -17,53 +58,3 @@ Changes made via Lovable will be committed automatically to this repo.
 **Use your preferred IDE**
 
 If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with .
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/d5c54e6b-5595-488b-9827-72f2fb284826) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
