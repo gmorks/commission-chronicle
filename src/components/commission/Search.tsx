@@ -34,10 +34,11 @@ export const Search = ({ months, onMonthSelect }: SearchProps) => {
     : [];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 text-card-foreground">
+      <h2 className="text-xl font-semibold mb-4">Buscar comisión por nombre</h2>
       <Input
         type="search"
-        placeholder="Search for book titles..."
+        placeholder="Buscar comisión por nombre..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />

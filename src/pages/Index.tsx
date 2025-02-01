@@ -10,15 +10,15 @@ import { Search } from "@/components/commission/Search";
 
 const Index = () => {
   console.log("Index component rendering");
-  
+
   const { toast } = useToast();
-  const { 
-    currentMonth, 
-    months, 
-    createNewMonth, 
-    addEntry, 
-    editEntry, 
-    deleteEntry, 
+  const {
+    currentMonth,
+    months,
+    createNewMonth,
+    addEntry,
+    editEntry,
+    deleteEntry,
     loadMonth,
     exportToJson,
     importFromJson
@@ -59,7 +59,7 @@ const Index = () => {
       });
       return;
     }
-    
+
     if (entry.id) {
       editEntry(entry.id, entry);
       toast({
@@ -85,26 +85,26 @@ const Index = () => {
 
   const exportAsText = () => {
     if (!currentMonth) return;
-    
+
     let text = `Informe de Comisiones - ${currentMonth.month} ${currentMonth.year}\n\n`;
-    
+
     currentMonth.entries.forEach((entry, index) => {
       text += `${index + 1}. ${entry.bookName}\n`;
       text += `   Volúmenes: ${entry.volumes}\n`;
       text += `   Archivos: ${entry.filesGenerated}\n\n`;
     });
-    
+
     text += `\nTotal del Mes: $${currentMonth.totalAmount}`;
-    
+
     const blob = new Blob([text], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.download = `${currentMonth.month}-${currentMonth.year}-comisiones.txt`;
     link.href = url;
     link.click();
-    
+
     URL.revokeObjectURL(url);
-    
+
     toast({
       title: "Éxito",
       description: "Informe de texto exportado correctamente",
@@ -113,14 +113,14 @@ const Index = () => {
 
   const exportAsPng = async () => {
     if (!currentMonth) return;
-    
+
     try {
       const exportDiv = document.createElement('div');
       exportDiv.className = 'p-6 bg-white';
       exportDiv.style.width = '512px';
-      
+
       let content = `<h1 class="text-lg font-semibold mb-4">Comisiones Spiral - ${currentMonth.month} ${currentMonth.year}</h1>`;
-      
+
       currentMonth.entries.forEach((entry, index) => {
         content += `
           <div class="mb-4" style="border: 1px solid #ccc; padding: 8px; margin: -1px 0;">
@@ -130,14 +130,14 @@ const Index = () => {
           </div>
         `;
       });
-      
+
       content += `<h2 class="text-xl font-semibold mt-4">Total del Mes: $${currentMonth.totalAmount}</h2>`;
-      
+
       exportDiv.innerHTML = content;
       document.body.appendChild(exportDiv);
-      
+
       await new Promise(resolve => setTimeout(resolve, 100));
-      
+
       const dataUrl = await toPng(exportDiv, {
         width: 512,
         height: exportDiv.offsetHeight,
@@ -147,14 +147,14 @@ const Index = () => {
           transform: 'scale(1)',
         },
       });
-      
+
       document.body.removeChild(exportDiv);
-      
+
       const link = document.createElement('a');
       link.download = `${currentMonth.month}-${currentMonth.year}-comisiones.png`;
       link.href = dataUrl;
       link.click();
-      
+
       toast({
         title: "Éxito",
         description: "Informe exportado como PNG correctamente",
@@ -171,15 +171,15 @@ const Index = () => {
 
   return (
     <div className="container mx-auto p-4 max-w-4xl">
-      <Header onExport={exportToJson} onImport={handleImport} />
-      
+
+
       <div className="grid gap-8">
         <Search months={months} onMonthSelect={loadMonth} />
         <MonthCreation createNewMonth={createNewMonth} />
-        <MonthSelector 
-          months={months} 
-          currentMonth={currentMonth} 
-          onMonthSelect={loadMonth} 
+        <MonthSelector
+          months={months}
+          currentMonth={currentMonth}
+          onMonthSelect={loadMonth}
         />
 
         <EditManager
@@ -191,6 +191,7 @@ const Index = () => {
           onExportPng={exportAsPng}
         />
       </div>
+      <Header onExport={exportToJson} onImport={handleImport} />
     </div>
   );
 };

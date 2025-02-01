@@ -23,7 +23,7 @@ export const EntryForm = ({ onSubmit, editingEntry, initialValues }: EntryFormPr
     bookName: "",
     volumes: "",
     filesGenerated: 0,
-    pricePerFile: 0,
+    pricePerFile: 150,
   });
 
   const handleSubmit = () => {
@@ -43,7 +43,7 @@ export const EntryForm = ({ onSubmit, editingEntry, initialValues }: EntryFormPr
       bookName: "",
       volumes: "",
       filesGenerated: 0,
-      pricePerFile: 0,
+      pricePerFile: 150,
     });
   };
 
@@ -86,6 +86,7 @@ export const EntryForm = ({ onSubmit, editingEntry, initialValues }: EntryFormPr
             <Label htmlFor="pricePerFile">Precio por Archivo</Label>
             <Input
               id="pricePerFile"
+              placeholder="150"
               type="number"
               value={newEntry.pricePerFile}
               onChange={(e) => setNewEntry(prev => ({ ...prev, pricePerFile: Number(e.target.value) }))}
